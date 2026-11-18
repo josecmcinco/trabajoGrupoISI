@@ -1,0 +1,93 @@
+### ==============================================================
+### APPV VIDEOCLUB - ARCHIVO DE PRUEBAS REST (.http)
+### ==============================================================
+@baseUrl = http://localhost:8080/api
+
+### 1. Listar Videoclubs
+GET {{baseUrl}}/videoclubs
+
+### 2. Crear Videoclub
+POST {{baseUrl}}/videoclubs
+Content-Type: application/json
+
+{
+  "nombreGerente": "Marta Delgado",
+  "ciudad": "Valencia",
+  "calle": "Calle Colón 8",
+  "codigoPostal": "46004"
+}
+
+### 3. Listar Películas (todas)
+GET {{baseUrl}}/peliculas
+
+### 4. Listar Películas por Videoclub (Sede 1 - Madrid)
+GET {{baseUrl}}/peliculas?videoclubId=1
+
+### 5. Crear Película en Sede Valencia (ID 3)
+POST {{baseUrl}}/peliculas
+Content-Type: application/json
+
+{
+  "nombre": "Oppenheimer",
+  "director": "Christopher Nolan",
+  "fechaEstreno": "2023-07-21",
+  "precioAlquiler": 4.50,
+  "videoclubId": 1
+}
+
+### 6. Listar Socios
+GET {{baseUrl}}/socios
+
+### 7. Registrar Socio
+POST {{baseUrl}}/socios
+Content-Type: application/json
+
+{
+  "nombre": "Carlos Ruiz",
+  "edad": 30,
+  "videoclubOrigenId": 1
+}
+
+### 8. Crear Alquiler (Demostrando fechas manuales y cálculo derivado)
+POST {{baseUrl}}/alquileres
+Content-Type: application/json
+
+{
+  "socioId": 1,
+  "videoclubId": 1,
+  "peliculaIds": [1, 2],
+  "fechaRecogida": "2026-11-10",
+  "fechaDevolucion": "2026-11-17"
+}
+
+### 9. Modificar Fecha de Devolución (Solo posterior a la fecha de referencia)
+PATCH {{baseUrl}}/alquileres/1/fecha-devolucion
+Content-Type: application/json
+
+{
+  "nuevaFechaDevolucion": "2026-11-25",
+  "fechaReferenciaUsuario": "2026-11-15"
+}
+
+### 10. Calcular Estadística Mensual para Socio (Admin, mes '2026-11')
+POST {{baseUrl}}/estadisticas/calcular
+Content-Type: application/json
+
+{
+  "socioId": 1,
+  "mesAnio": "2026-11",
+  "fechaOperacion": "2026-11-17"
+}
+
+### 11. Intentar calcular nuevamente el mismo mes para el mismo socio (Debe fallar: 422 Unprocessable Entity)
+POST {{baseUrl}}/estadisticas/calcular
+Content-Type: application/json
+
+{
+  "socioId": 1,
+  "mesAnio": "2026-11",
+  "fechaOperacion": "2026-11-17"
+}
+
+### 12. Listar Estadísticas de un Socio
+GET {{baseUrl}}/estadisticas/socio/1
