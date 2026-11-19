@@ -31,7 +31,6 @@ import { UserRoleContextService, UserRole } from '../../services/user-role-conte
     <mat-toolbar color="primary" class="main-toolbar">
       <div class="logo-section">
         <mat-icon>local_movies</mat-icon>
-        <span class="app-title">APPV Videoclub</span>
       </div>
 
       <nav class="nav-links">

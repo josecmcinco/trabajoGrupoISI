@@ -1,0 +1,159 @@
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 0;
+}
+
+.summary-card > mat-icon {
+  width: 44px;
+  height: 44px;
+  font-size: 44px;
+  color: #1a237e;
+}
+
+.summary-label {
+  margin: 0;
+  color: #616161;
+}
+
+.summary-value {
+  display: block;
+  margin-top: 4px;
+  color: #1a237e;
+  font-size: 1.5rem;
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  color: #1a237e;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.section-description {
+  margin: 0 0 16px;
+  color: #616161;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.alert mat-icon {
+  flex: 0 0 auto;
+}
+
+.alert-warning {
+  border-left: 4px solid #ed6c02;
+  background: #fff4e5;
+  color: #663c00;
+}
+
+.alert-error {
+  border-left: 4px solid #d32f2f;
+  background: #fdeded;
+  color: #5f2120;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-header h2 {
+  margin-bottom: 8px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.secondary-text {
+  margin-left: 6px;
+  color: #757575;
+  font-size: 0.85rem;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+}
+
+.access-denied {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-left: 5px solid #c62828;
+}
+
+.access-denied > mat-icon {
+  width: 36px;
+  height: 36px;
+  color: #c62828;
+  font-size: 36px;
+}
+
+.access-denied h1,
+.access-denied p {
+  margin: 0;
+}
+
+.access-denied p {
+  margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card-elevated {
+    padding: 16px;
+  }
+
+  .form-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}
