@@ -39,44 +39,37 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
 
       <mat-card>
         <mat-card-content>
+          <table class="siger-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>DNI</th>
+                <th>Reportero</th>
+                <th>Categoría en Bolsa</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (s of aceptadas(); track s.id) {
+                <tr>
+                  <td>#{{ s.id }}</td>
+                  <td>{{ s.fecha | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ s.reportero.dni }}</td>
+                  <td>{{ s.reportero.nombre }} {{ s.reportero.apellidos }}</td>
+                  <td>
+                    @if (s.reportero.categoria) {
+                      Nivel {{ s.reportero.categoria.nivel }} — {{ s.reportero.categoria.nombre }}
+                    } @else {
+                      —
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+
           @if (aceptadas().length === 0) {
             <div class="empty-state">No hay solicitudes aprobadas todavía.</div>
-          } @else {
-            <table mat-table [dataSource]="aceptadas()" class="full-width-table">
-              <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef>ID</th>
-                <td mat-cell *matCellDef="let s">#{{ s.id }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="fecha">
-                <th mat-header-cell *matHeaderCellDef>Fecha</th>
-                <td mat-cell *matCellDef="let s">{{ s.fecha | date: 'dd/MM/yyyy' }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="dni">
-                <th mat-header-cell *matHeaderCellDef>DNI</th>
-                <td mat-cell *matCellDef="let s">{{ s.reportero.dni }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="reportero">
-                <th mat-header-cell *matHeaderCellDef>Reportero</th>
-                <td mat-cell *matCellDef="let s">{{ s.reportero.nombre }} {{ s.reportero.apellidos }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="categoria">
-                <th mat-header-cell *matHeaderCellDef>Categoría en Bolsa</th>
-                <td mat-cell *matCellDef="let s">
-                  @if (s.reportero.categoria) {
-                    Nivel {{ s.reportero.categoria.nivel }} — {{ s.reportero.categoria.nombre }}
-                  } @else {
-                    —
-                  }
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
           }
         </mat-card-content>
       </mat-card>

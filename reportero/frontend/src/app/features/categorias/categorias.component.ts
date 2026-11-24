@@ -48,45 +48,41 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
           <mat-card-title>Niveles de Calidad y Precio por Hoja Escrita</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <table mat-table [dataSource]="categorias()" class="full-width-table">
-            <ng-container matColumnDef="nivel">
-              <th mat-header-cell *matHeaderCellDef>Nivel</th>
-              <td mat-cell *matCellDef="let c">Nivel {{ c.nivel }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="nombre">
-              <th mat-header-cell *matHeaderCellDef>Categoría</th>
-              <td mat-cell *matCellDef="let c">{{ c.nombre }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="precioActual">
-              <th mat-header-cell *matHeaderCellDef>Precio Actual / Hoja</th>
-              <td mat-cell *matCellDef="let c">{{ c.precioPorHoja | currency: 'EUR' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="nuevoPrecio">
-              <th mat-header-cell *matHeaderCellDef>Actualizar Precio</th>
-              <td mat-cell *matCellDef="let c">
-                <div class="edit-price-row">
-                  <mat-form-field appearance="outline" class="price-input">
-                    <mat-label>Nuevo precio (€)</mat-label>
-                    <input
-                      matInput
-                      type="number"
-                      min="0.01"
-                      step="0.50"
-                      [ngModel]="precioEditado(c.id, c.precioPorHoja)"
-                      (ngModelChange)="cambiarPrecioLocal(c.id, $event)" />
-                  </mat-form-field>
-                  <button mat-flat-button color="primary" (click)="guardarPrecio(c)">
-                    Guardar
-                  </button>
-                </div>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <table class="siger-table">
+            <thead>
+              <tr>
+                <th>Nivel</th>
+                <th>Categoría</th>
+                <th>Precio Actual / Hoja</th>
+                <th>Actualizar Precio</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (c of categorias(); track c.id) {
+                <tr>
+                  <td>Nivel {{ c.nivel }}</td>
+                  <td>{{ c.nombre }}</td>
+                  <td>{{ c.precioPorHoja | currency: 'EUR' }}</td>
+                  <td>
+                    <div class="edit-price-row">
+                      <mat-form-field appearance="outline" class="price-input">
+                        <mat-label>Nuevo precio (€)</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          min="0.01"
+                          step="0.50"
+                          [ngModel]="precioEditado(c.id, c.precioPorHoja)"
+                          (ngModelChange)="cambiarPrecioLocal(c.id, $event)" />
+                      </mat-form-field>
+                      <button mat-flat-button color="primary" (click)="guardarPrecio(c)">
+                        Guardar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
           </table>
         </mat-card-content>
       </mat-card>

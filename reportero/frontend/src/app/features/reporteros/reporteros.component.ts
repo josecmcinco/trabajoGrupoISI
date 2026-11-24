@@ -50,67 +50,63 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
+          <table class="siger-table">
+            <thead>
+              <tr>
+                <th>DNI</th>
+                <th>Reportero</th>
+                <th>Categoría Actual</th>
+                <th>Promocionar</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of reporteros(); track r.id) {
+                <tr>
+                  <td>{{ r.dni }}</td>
+                  <td>
+                    <strong>{{ r.nombre }} {{ r.apellidos }}</strong>
+                    <div class="subtext">{{ r.ciudad }} · Tel: {{ r.telefono }}</div>
+                  </td>
+                  <td>
+                    @if (r.categoria) {
+                      Nivel {{ r.categoria.nivel }} — {{ r.categoria.nombre }}
+                      ({{ r.categoria.precioPorHoja | currency: 'EUR' }}/hoja)
+                    }
+                  </td>
+                  <td>
+                    @if (categoriasSuperiores(r).length === 0) {
+                      <span class="subtext">Categoría máxima alcanzada</span>
+                    } @else {
+                      <div class="promote-row">
+                        <mat-form-field appearance="outline" class="compact-select">
+                          <mat-label>Nueva categoría</mat-label>
+                          <mat-select
+                            [value]="categoriaDestino(r.id)"
+                            (selectionChange)="seleccionarDestino(r.id, $event.value)">
+                            @for (cat of categoriasSuperiores(r); track cat.id) {
+                              <mat-option [value]="cat.id">
+                                Nivel {{ cat.nivel }} - {{ cat.nombre }}
+                              </mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                        <button
+                          mat-flat-button
+                          color="primary"
+                          [disabled]="!categoriaDestino(r.id)"
+                          (click)="promocionar(r)">
+                          Ascender
+                        </button>
+                      </div>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+
           @if (reporteros().length === 0) {
             <div class="empty-state">No hay reporteros en bolsa todavía.</div>
-          } @else {
-            <table mat-table [dataSource]="reporteros()" class="full-width-table">
-              <ng-container matColumnDef="dni">
-                <th mat-header-cell *matHeaderCellDef>DNI</th>
-                <td mat-cell *matCellDef="let r">{{ r.dni }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef>Reportero</th>
-                <td mat-cell *matCellDef="let r">
-                  <strong>{{ r.nombre }} {{ r.apellidos }}</strong>
-                  <div class="subtext">{{ r.ciudad }} · Tel: {{ r.telefono }}</div>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="categoriaActual">
-                <th mat-header-cell *matHeaderCellDef>Categoría Actual</th>
-                <td mat-cell *matCellDef="let r">
-                  @if (r.categoria) {
-                    Nivel {{ r.categoria.nivel }} — {{ r.categoria.nombre }}
-                    ({{ r.categoria.precioPorHoja | currency: 'EUR' }}/hoja)
-                  }
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="promocion">
-                <th mat-header-cell *matHeaderCellDef>Promocionar</th>
-                <td mat-cell *matCellDef="let r">
-                  @if (categoriasSuperiores(r).length === 0) {
-                    <span class="subtext">Categoría máxima alcanzada</span>
-                  } @else {
-                    <div class="promote-row">
-                      <mat-form-field appearance="outline" class="compact-select">
-                        <mat-label>Nueva categoría</mat-label>
-                        <mat-select
-                          [value]="categoriaDestino(r.id)"
-                          (selectionChange)="seleccionarDestino(r.id, $event.value)">
-                          @for (cat of categoriasSuperiores(r); track cat.id) {
-                            <mat-option [value]="cat.id">
-                              Nivel {{ cat.nivel }} - {{ cat.nombre }}
-                            </mat-option>
-                          }
-                        </mat-select>
-                      </mat-form-field>
-                      <button
-                        mat-flat-button
-                        color="primary"
-                        [disabled]="!categoriaDestino(r.id)"
-                        (click)="promocionar(r)">
-                        Ascender
-                      </button>
-                    </div>
-                  }
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
           }
         </mat-card-content>
       </mat-card>

@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table';
 import { Categoria, CrearSolicitudRequest, EstadoSolicitud, Solicitud } from '../../core/models/siger.models';
 import { CategoriasService } from '../../core/services/categorias.service';
 import { SolicitudesService } from '../../core/services/solicitudes.service';
@@ -32,8 +31,7 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
     MatInputModule,
     MatProgressBarModule,
     MatSelectModule,
-    MatSnackBarModule,
-    MatTableModule
+    MatSnackBarModule
   ],
   template: `
     <div class="page-container">
@@ -145,85 +143,75 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
             </mat-form-field>
           </div>
 
+          <table class="siger-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Reportero</th>
+                <th>Equipo y CV</th>
+                <th>Estado</th>
+                <th>Resolución</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (s of solicitudesFiltradas(); track s.id) {
+                <tr>
+                  <td>#{{ s.id }}</td>
+                  <td>{{ s.fecha | date: 'dd/MM/yyyy' }}</td>
+                  <td>
+                    <strong>{{ s.reportero.nombre }} {{ s.reportero.apellidos }}</strong>
+                    <div class="subtext">DNI: {{ s.reportero.dni }} · {{ s.reportero.ciudad }}</div>
+                  </td>
+                  <td>
+                    <div>{{ s.resumenCv }}</div>
+                    @if (s.equipoFotografico) {
+                      <div class="subtext">Equipo: {{ s.equipoFotografico }}</div>
+                    }
+                  </td>
+                  <td>
+                    <span class="status-badge status-{{ s.estado }}">{{ s.estado }}</span>
+                  </td>
+                  <td>
+                    @if (s.estado === 'PENDIENTE') {
+                      <div class="resolve-actions">
+                        <mat-form-field appearance="outline" class="compact-select">
+                          <mat-label>Categoría</mat-label>
+                          <mat-select
+                            [value]="categoriaSeleccionada(s.id)"
+                            (selectionChange)="seleccionarCategoria(s.id, $event.value)">
+                            @for (cat of categorias(); track cat.id) {
+                              <mat-option [value]="cat.id">
+                                Nivel {{ cat.nivel }} - {{ cat.nombre }}
+                              </mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+
+                        <button
+                          mat-flat-button
+                          color="primary"
+                          [disabled]="!categoriaSeleccionada(s.id)"
+                          (click)="aprobarSolicitud(s)">
+                          Aprobar
+                        </button>
+                        <button mat-stroked-button color="warn" (click)="rechazarSolicitud(s)">
+                          Rechazar
+                        </button>
+                      </div>
+                    } @else if (s.reportero.categoria) {
+                      <span class="subtext">Categoría actual: Nivel {{ s.reportero.categoria.nivel }}</span>
+                    } @else {
+                      <span class="subtext">—</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+
           @if (solicitudesFiltradas().length === 0) {
             <div class="empty-state">No hay solicitudes para mostrar.</div>
-          } @else {
-            <table mat-table [dataSource]="solicitudesFiltradas()" class="full-width-table">
-              <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef>ID</th>
-                <td mat-cell *matCellDef="let s">#{{ s.id }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="fecha">
-                <th mat-header-cell *matHeaderCellDef>Fecha</th>
-                <td mat-cell *matCellDef="let s">{{ s.fecha | date: 'dd/MM/yyyy' }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="reportero">
-                <th mat-header-cell *matCellDef>Reportero</th>
-                <td mat-cell *matCellDef="let s">
-                  <strong>{{ s.reportero.nombre }} {{ s.reportero.apellidos }}</strong>
-                  <div class="subtext">DNI: {{ s.reportero.dni }} · {{ s.reportero.ciudad }}</div>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="detalles">
-                <th mat-header-cell *matCellDef>Equipo y CV</th>
-                <td mat-cell *matCellDef="let s">
-                  <div>{{ s.resumenCv }}</div>
-                  @if (s.equipoFotografico) {
-                    <div class="subtext">Equipo: {{ s.equipoFotografico }}</div>
-                  }
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="estado">
-                <th mat-header-cell *matHeaderCellDef>Estado</th>
-                <td mat-cell *matCellDef="let s">
-                  <span class="status-badge status-{{ s.estado }}">{{ s.estado }}</span>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="acciones">
-                <th mat-header-cell *matHeaderCellDef>Resolución</th>
-                <td mat-cell *matCellDef="let s">
-                  @if (s.estado === 'PENDIENTE') {
-                    <div class="resolve-actions">
-                      <mat-form-field appearance="outline" class="compact-select">
-                        <mat-label>Categoría</mat-label>
-                        <mat-select
-                          [value]="categoriaSeleccionada(s.id)"
-                          (selectionChange)="seleccionarCategoria(s.id, $event.value)">
-                          @for (cat of categorias(); track cat.id) {
-                            <mat-option [value]="cat.id">
-                              Nivel {{ cat.nivel }} - {{ cat.nombre }}
-                            </mat-option>
-                          }
-                        </mat-select>
-                      </mat-form-field>
-
-                      <button
-                        mat-flat-button
-                        color="primary"
-                        [disabled]="!categoriaSeleccionada(s.id)"
-                        (click)="aprobarSolicitud(s)">
-                        Aprobar
-                      </button>
-                      <button mat-stroked-button color="warn" (click)="rechazarSolicitud(s)">
-                        Rechazar
-                      </button>
-                    </div>
-                  } @else if (s.reportero.categoria) {
-                    <span class="subtext">Categoría actual: Nivel {{ s.reportero.categoria.nivel }}</span>
-                  } @else {
-                    <span class="subtext">—</span>
-                  }
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
           }
         </mat-card-content>
       </mat-card>
@@ -274,8 +262,6 @@ export class SolicitudesComponent implements OnInit {
   private readonly solicitudesService = inject(SolicitudesService);
   private readonly categoriasService = inject(CategoriasService);
   private readonly snackBar = inject(MatSnackBar);
-
-  readonly displayedColumns = ['id', 'fecha', 'reportero', 'detalles', 'estado', 'acciones'];
 
   readonly solicitudes = signal<Solicitud[]>([]);
   readonly categorias = signal<Categoria[]>([]);
