@@ -3,53 +3,6 @@
 **Fecha y hora:**
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
-## Ejercicio 2
-
-Los reporteros hacen reportajes de fotos. Un reportaje es un compendio
-de fotos sobre un tema en concreto, por ejemplo, la boda de algún
-famoso. Estos reportajes se almacenan en el sistema y aquellas
-editoriales que deseen los reportajes, deben pagar a la agencia para
-conseguir las fotos. Con el dinero recogido, se paga a los reporteros
-que hicieron el reportaje y el resto de ingresos se los queda la agencia
-fotográfica. La funcionalidad que hay que soportar es la siguiente:
-
--   Dar de alta un reportaje nuevo.
--   Gestionar datos de las editoriales.
--   Adquirir un reportaje.
-
-### 2.1 Dar de alta un reportaje nuevo
-
-Esta funcionalidad almacena en el sistema un nuevo reportaje de fotos.
-Para cada reportaje, el secretario indica: el reportero que tomó las
-fotos, el número de fotos que incluye en reportaje, y una breve
-descripción del contenido del reportaje. El reportaje queda así expuesto
-a las editoriales que quieran adquirirlo. El secretario debe poder
-listar el conjunto de reportajes existentes.
-
-### 2.2 Gestionar datos de las editoriales
-
-La agencia de reporteros trabaja con un grupo de editoriales, las cuales
-deben estar almacenadas en el sistema. El secretario de la empresa es el
-que se encarga de crear nuevas editoriales, modificar sus datos, y
-borrarlas. Por cada editorial nos interesa conocer: nombre, CIF,
-dirección. El secretario debe poder listar el conjunto de editoriales.
-
-### 2.3 Adquirir un reportaje
-
-Cuando una editorial desea adquirir un reportaje, el secretario crea un
-albarán de compra. En el albarán se especifica: el reportaje a adquirir,
-la editorial que lo adquiere, la cantidad de dinero que va a pagar la
-editorial por ese reportaje, la cantidad de dinero que va a percibir el
-reportero que hizo el reportaje, y la fecha de creación del albarán. El
-precio a pagar al reportero se debe calcular automáticamente como el
-producto del precio a pagar por foto dependiendo del nivel del
-reportero, por el total de fotos que contiene el reportaje. Existe una
-restricción, el precio a cobrar a la editorial nunca debe ser menor que
-el precio a pagar al reportero. Los reportajes vendidos no pasan a ser
-exclusivos para la editorial, es decir, la agencia fotográfica puede
-vender un mismo reportaje tantas veces como quiera. Cada una de estas
-ventas da lugar a un albarán distinto. El secretario debe poder listar
-todos los albaranes existentes.
 
 **Fecha y hora:**
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
