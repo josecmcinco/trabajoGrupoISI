@@ -5,6 +5,7 @@ export interface Categoria {
   nivel: number;
   nombre: string;
   precioPorHoja: number;
+  precioPorFoto: number;
 }
 
 export interface Reportero {
@@ -46,11 +47,55 @@ export interface AprobarSolicitudRequest {
 }
 
 export interface ActualizarPrecioCategoriaRequest {
-  precioPorHoja: number;
+  precioPorHoja?: number;
+  precioPorFoto?: number;
 }
 
 export interface PromocionarReporteroRequest {
   categoriaId: number;
+}
+
+export interface Editorial {
+  id: number;
+  nombre: string;
+  cif: string;
+  direccion: string;
+}
+
+export interface EditorialRequest {
+  nombre: string;
+  cif: string;
+  direccion: string;
+}
+
+export interface Reportaje {
+  id: number;
+  numeroFotos: number;
+  descripcion: string;
+  fechaCreacion: string;
+  reportero: Reportero;
+}
+
+export interface CrearReportajeRequest {
+  reporteroId: number;
+  numeroFotos: number;
+  descripcion: string;
+}
+
+export interface Albaran {
+  id: number;
+  reportaje: Reportaje;
+  editorial: Editorial;
+  precioEditorial: number;
+  precioReportero: number;
+  beneficioAgencia: number;
+  fechaCreacion: string;
+}
+
+export interface CrearAlbaranRequest {
+  reportajeId: number;
+  editorialId: number;
+  precioEditorial: number;
 }
 
 export interface ApiErrorResponse {

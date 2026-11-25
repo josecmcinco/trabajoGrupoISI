@@ -38,4 +38,7 @@ public class Categoria {
 
 	@Column(name = "precio_por_hoja", nullable = false, precision = 10, scale = 2)
 	private BigDecimal precioPorHoja;
+
+	@Column(name = "precio_por_foto", precision = 10, scale = 2)
+	private BigDecimal precioPorFoto;
 }

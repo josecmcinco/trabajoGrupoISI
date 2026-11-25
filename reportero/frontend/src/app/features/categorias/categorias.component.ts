@@ -45,7 +45,7 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
 
       <mat-card>
         <mat-card-header>
-          <mat-card-title>Niveles de Calidad y Precio por Hoja Escrita</mat-card-title>
+          <mat-card-title>Niveles de Calidad y Tarifas (Hoja Escrita y Foto)</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <table class="siger-table">
@@ -53,8 +53,9 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
               <tr>
                 <th>Nivel</th>
                 <th>Categoría</th>
-                <th>Precio Actual / Hoja</th>
-                <th>Actualizar Precio</th>
+                <th>Precio / Hoja</th>
+                <th>Precio / Foto</th>
+                <th>Actualizar Tarifas</th>
               </tr>
             </thead>
             <tbody>
@@ -63,19 +64,32 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
                   <td>Nivel {{ c.nivel }}</td>
                   <td>{{ c.nombre }}</td>
                   <td>{{ c.precioPorHoja | currency: 'EUR' }}</td>
+                  <td>{{ c.precioPorFoto | currency: 'EUR' }}</td>
                   <td>
                     <div class="edit-price-row">
                       <mat-form-field appearance="outline" class="price-input">
-                        <mat-label>Nuevo precio (€)</mat-label>
+                        <mat-label>Precio / hoja (€)</mat-label>
                         <input
                           matInput
                           type="number"
                           min="0.01"
                           step="0.50"
-                          [ngModel]="precioEditado(c.id, c.precioPorHoja)"
-                          (ngModelChange)="cambiarPrecioLocal(c.id, $event)" />
+                          [ngModel]="precioHojaEditado(c.id, c.precioPorHoja)"
+                          (ngModelChange)="cambiarPrecioHojaLocal(c.id, $event)" />
                       </mat-form-field>
-                      <button mat-flat-button color="primary" (click)="guardarPrecio(c)">
+
+                      <mat-form-field appearance="outline" class="price-input">
+                        <mat-label>Precio / foto (€)</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          min="0.01"
+                          step="0.50"
+                          [ngModel]="precioFotoEditado(c.id, c.precioPorFoto)"
+                          (ngModelChange)="cambiarPrecioFotoLocal(c.id, $event)" />
+                      </mat-form-field>
+
+                      <button mat-flat-button color="primary" (click)="guardarPrecios(c)">
                         Guardar
                       </button>
                     </div>
@@ -92,11 +106,12 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
     .edit-price-row {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 12px;
       padding: 6px 0;
     }
     .price-input {
-      width: 160px;
+      width: 150px;
       margin-bottom: -1.25em;
     }
   `]
@@ -105,10 +120,10 @@ export class CategoriasComponent implements OnInit {
   private readonly categoriasService = inject(CategoriasService);
   private readonly snackBar = inject(MatSnackBar);
 
-  readonly displayedColumns = ['nivel', 'nombre', 'precioActual', 'nuevoPrecio'];
   readonly categorias = signal<Categoria[]>([]);
   readonly cargando = signal(false);
-  private readonly preciosBorrador = signal<Record<number, number>>({});
+  private readonly preciosHojaBorrador = signal<Record<number, number>>({});
+  private readonly preciosFotoBorrador = signal<Record<number, number>>({});
 
   ngOnInit(): void {
     this.cargarCategorias();
@@ -128,19 +143,28 @@ export class CategoriasComponent implements OnInit {
     });
   }
 
-  precioEditado(id: number, actual: number): number {
-    return this.preciosBorrador()[id] ?? actual;
+  precioHojaEditado(id: number, actual: number): number {
+    return this.preciosHojaBorrador()[id] ?? actual;
   }
 
-  cambiarPrecioLocal(id: number, valor: number): void {
-    this.preciosBorrador.update((map) => ({ ...map, [id]: Number(valor) }));
+  cambiarPrecioHojaLocal(id: number, valor: number): void {
+    this.preciosHojaBorrador.update((map) => ({ ...map, [id]: Number(valor) }));
   }
 
-  guardarPrecio(categoria: Categoria): void {
-    const nuevoPrecio = this.precioEditado(categoria.id, categoria.precioPorHoja);
-    this.categoriasService.actualizarPrecio(categoria.id, { precioPorHoja: nuevoPrecio }).subscribe({
+  precioFotoEditado(id: number, actual: number): number {
+    return this.preciosFotoBorrador()[id] ?? actual;
+  }
+
+  cambiarPrecioFotoLocal(id: number, valor: number): void {
+    this.preciosFotoBorrador.update((map) => ({ ...map, [id]: Number(valor) }));
+  }
+
+  guardarPrecios(categoria: Categoria): void {
+    const precioPorHoja = this.precioHojaEditado(categoria.id, categoria.precioPorHoja);
+    const precioPorFoto = this.precioFotoEditado(categoria.id, categoria.precioPorFoto);
+    this.categoriasService.actualizarPrecio(categoria.id, { precioPorHoja, precioPorFoto }).subscribe({
       next: () => {
-        this.snackBar.open(`Precio de ${categoria.nombre} actualizado`, 'Cerrar', { duration: 3500 });
+        this.snackBar.open(`Tarifas de ${categoria.nombre} actualizadas`, 'Cerrar', { duration: 3500 });
         this.cargarCategorias();
       },
       error: (err) => this.snackBar.open(extractErrorMessage(err), 'Cerrar', { duration: 5000 })

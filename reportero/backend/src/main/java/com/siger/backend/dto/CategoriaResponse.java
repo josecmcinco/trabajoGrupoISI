@@ -8,14 +8,16 @@ public record CategoriaResponse(
 		Long id,
 		Integer nivel,
 		String nombre,
-		BigDecimal precioPorHoja
+		BigDecimal precioPorHoja,
+		BigDecimal precioPorFoto
 ) {
 	public static CategoriaResponse from(Categoria categoria) {
 		return new CategoriaResponse(
 				categoria.getId(),
 				categoria.getNivel(),
 				categoria.getNombre(),
-				categoria.getPrecioPorHoja()
+				categoria.getPrecioPorHoja(),
+				categoria.getPrecioPorFoto()
 		);
 	}
 }

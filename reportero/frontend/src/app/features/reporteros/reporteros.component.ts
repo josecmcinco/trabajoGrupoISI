@@ -70,7 +70,7 @@ import { extractErrorMessage } from '../../core/utils/error.utils';
                   <td>
                     @if (r.categoria) {
                       Nivel {{ r.categoria.nivel }} — {{ r.categoria.nombre }}
-                      ({{ r.categoria.precioPorHoja | currency: 'EUR' }}/hoja)
+                      ({{ r.categoria.precioPorHoja | currency: 'EUR' }}/hoja · {{ r.categoria.precioPorFoto | currency: 'EUR' }}/foto)
                     }
                   </td>
                   <td>

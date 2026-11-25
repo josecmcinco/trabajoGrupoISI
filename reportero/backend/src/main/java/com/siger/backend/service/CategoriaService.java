@@ -2,6 +2,7 @@ package com.siger.backend.service;
 
 import com.siger.backend.dto.ActualizarPrecioCategoriaRequest;
 import com.siger.backend.dto.CategoriaResponse;
+import com.siger.backend.exception.InvalidRequestException;
 import com.siger.backend.exception.ResourceNotFoundException;
 import com.siger.backend.model.Categoria;
 import com.siger.backend.repository.CategoriaRepository;
@@ -27,9 +28,17 @@ public class CategoriaService {
 
 	@Transactional
 	public CategoriaResponse actualizarPrecio(Long id, ActualizarPrecioCategoriaRequest request) {
+		if (request.precioPorHoja() == null && request.precioPorFoto() == null) {
+			throw new InvalidRequestException("Debe indicar al menos el precio por hoja o el precio por foto");
+		}
 		Categoria categoria = categoriaRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con id: " + id));
-		categoria.setPrecioPorHoja(request.precioPorHoja());
+		if (request.precioPorHoja() != null) {
+			categoria.setPrecioPorHoja(request.precioPorHoja());
+		}
+		if (request.precioPorFoto() != null) {
+			categoria.setPrecioPorFoto(request.precioPorFoto());
+		}
 		return CategoriaResponse.from(categoriaRepository.save(categoria));
 	}
 }

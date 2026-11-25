@@ -39,6 +39,18 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           <mat-icon>trending_up</mat-icon>
           Bolsa / Promoción
         </a>
+        <a mat-button routerLink="/reportajes" routerLinkActive="active-link">
+          <mat-icon>photo_library</mat-icon>
+          Reportajes
+        </a>
+        <a mat-button routerLink="/editoriales" routerLinkActive="active-link">
+          <mat-icon>business</mat-icon>
+          Editoriales
+        </a>
+        <a mat-button routerLink="/albaranes" routerLinkActive="active-link">
+          <mat-icon>receipt_long</mat-icon>
+          Albaranes
+        </a>
       </nav>
     </mat-toolbar>
 
