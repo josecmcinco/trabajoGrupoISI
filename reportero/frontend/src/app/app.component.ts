@@ -47,6 +47,10 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           <mat-icon>business</mat-icon>
           Editoriales
         </a>
+        <a mat-button routerLink="/exclusivas" routerLinkActive="active-link">
+          <mat-icon>stars</mat-icon>
+          Exclusivas
+        </a>
         <a mat-button routerLink="/albaranes" routerLinkActive="active-link">
           <mat-icon>receipt_long</mat-icon>
           Albaranes

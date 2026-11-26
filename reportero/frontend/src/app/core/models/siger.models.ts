@@ -98,6 +98,36 @@ export interface CrearAlbaranRequest {
   precioEditorial: number;
 }
 
+export type EstadoExclusiva = 'OFERTADA' | 'ASIGNADA' | 'FINALIZADA';
+
+export interface Exclusiva {
+  id: number;
+  editorial: Editorial;
+  tematica: string;
+  precioReportero: number;
+  estado: EstadoExclusiva;
+  reportero: Reportero | null;
+  fechaCreacion: string;
+  fechaAsignacion: string | null;
+  fechaFinalizacion: string | null;
+}
+
+export interface CrearExclusivaRequest {
+  editorialId: number;
+  tematica: string;
+  precioReportero: number;
+  fechaCreacion: string;
+}
+
+export interface AsignarExclusivaRequest {
+  reporteroId: number;
+  fechaAsignacion: string;
+}
+
+export interface FinalizarExclusivaRequest {
+  fechaFinalizacion: string;
+}
+
 export interface ApiErrorResponse {
   timestamp?: string;
   status?: number;
